@@ -17,9 +17,13 @@ import {
     Activity,
     Zap,
     Sparkles,
+    Cpu,
+    Radio,
 } from 'lucide-react';
 
 const navItems = [
+    { id: 'command-center', label: 'Command Center', icon: Radio },
+    { id: 'digital-twin', label: 'Digital Twin Lab', icon: Cpu },
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'traffic', label: 'Live Traffic', icon: Map },
     { id: 'routes', label: 'Route Planner', icon: Navigation },

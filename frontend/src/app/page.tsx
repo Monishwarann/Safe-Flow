@@ -13,9 +13,13 @@ import AnalyticsPage from '@/components/AnalyticsPage';
 import AlertsPage from '@/components/AlertsPage';
 import SettingsPage from '@/components/SettingsPage';
 import FutureScopePage from '@/components/FutureScopePage';
+import CommandCenterPage from '@/components/CommandCenterPage';
+import DigitalTwinLab from '@/components/DigitalTwinLab';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const pageComponents: Record<string, React.ComponentType> = {
+  'command-center': CommandCenterPage,
+  'digital-twin': DigitalTwinLab,
   dashboard: DashboardPage,
   traffic: TrafficPage,
   routes: RoutePlannerPage,
@@ -62,7 +66,7 @@ export default function Home() {
     return <LoginPage />;
   }
 
-  const ActivePage = pageComponents[activePage] || DashboardPage;
+  const ActivePage = pageComponents[activePage] || CommandCenterPage;
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>

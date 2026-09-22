@@ -153,7 +153,52 @@ interface LeaderboardItem {
     badge: string;
 }
 
+interface CopilotResponse {
+    success: boolean;
+    provider: string;
+    intent: string;
+    answer: string;
+    dataSources: string[];
+    confidence: number;
+    recommendations: string[];
+    explanation: string;
+}
+
+interface IncidentItem {
+    incidentId: string;
+    type: string;
+    severity: string;
+    zone: string;
+    confidence: number;
+    detectedAt: string;
+    estimatedImpact: { delayMinutes: number; affectedVehicles: number };
+    recommendedActions: string[];
+    status: string;
+}
+
+interface ForecastTimelineItem {
+    horizon: string;
+    congestionPercent: number;
+    averageSpeedKmh: number;
+    vehicleVolume: number;
+    travelTimeMultiplier: number;
+    queueLengthMeters: number;
+    incidentRisk: string;
+    co2EmissionKg: number;
+}
+
 interface AppState {
+    // Safe-Flow X State
+    copilotLoading: boolean;
+    copilotResponse: CopilotResponse | null;
+    incidents: IncidentItem[];
+    forecastTimeline: ForecastTimelineItem[];
+    digitalTwinResult: any | null;
+    systemHealth: any | null;
+    demoStep: number;
+    demoActive: boolean;
+    chaosActive: boolean;
+
     // Future AI & Eco State
     predictiveData: PredictiveZone[];
     activeCorridor: EmergencyCorridor | null;
@@ -222,6 +267,17 @@ interface AppState {
     updateSettings: (settings: Partial<Settings>) => Promise<void>;
     markAlertRead: (id: string) => void;
 
+    // Safe-Flow X Actions
+    queryCopilot: (prompt: string) => Promise<void>;
+    fetchIncidents: () => Promise<void>;
+    fetchForecastTimeline: (strategy?: string) => Promise<void>;
+    simulateScenario: (scenario: string, parameters?: any) => Promise<void>;
+    fetchSystemHealth: () => Promise<void>;
+    startDemo: () => void;
+    nextDemoStep: () => void;
+    stopDemo: () => void;
+    toggleChaos: () => void;
+
     // Future Scope Actions
     fetchPredictiveTraffic: () => Promise<void>;
     dispatchEmergencyCorridor: (vehicleType: string, originZone: string, destinationZone: string) => Promise<void>;
@@ -279,6 +335,17 @@ const useStore = create<AppState>((set, get) => ({
     activeCorridor: null,
     leaderboard: [],
     offsetResult: null,
+
+    // Safe-Flow X Initial State
+    copilotLoading: false,
+    copilotResponse: null,
+    incidents: [],
+    forecastTimeline: [],
+    digitalTwinResult: null,
+    systemHealth: null,
+    demoStep: 0,
+    demoActive: false,
+    chaosActive: false,
 
     // Loading
     loading: {
@@ -693,7 +760,76 @@ const useStore = create<AppState>((set, get) => ({
             set({ leaderboard: data.leaderboard || [] });
         } catch { /* noop */ }
     },
+
+    // Safe-Flow X Actions
+    queryCopilot: async (prompt: string) => {
+        const { token } = get();
+        if (!token) return;
+        set({ copilotLoading: true });
+        try {
+            const res = await fetch(`${API_BASE}/ai/copilot`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ prompt }),
+            });
+            const data = await res.json();
+            set({ copilotResponse: data, copilotLoading: false });
+        } catch {
+            set({ copilotLoading: false });
+        }
+    },
+
+    fetchIncidents: async () => {
+        const { token } = get();
+        if (!token) return;
+        try {
+            const res = await fetch(`${API_BASE}/incidents`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const data = await res.json();
+            set({ incidents: data.incidents || [] });
+        } catch { /* noop */ }
+    },
+
+    fetchForecastTimeline: async (strategy = 'TIME_SERIES') => {
+        const { token } = get();
+        if (!token) return;
+        try {
+            const res = await fetch(`${API_BASE}/ai/traffic-forecast?strategy=${strategy}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const data = await res.json();
+            set({ forecastTimeline: data.timeline || [] });
+        } catch { /* noop */ }
+    },
+
+    simulateScenario: async (scenario, parameters = {}) => {
+        const { token } = get();
+        if (!token) return;
+        try {
+            const res = await fetch(`${API_BASE}/digital-twin/simulate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ scenario, parameters }),
+            });
+            const data = await res.json();
+            set({ digitalTwinResult: data });
+        } catch { /* noop */ }
+    },
+
+    fetchSystemHealth: async () => {
+        try {
+            const res = await fetch(`${API_BASE}/system/health`);
+            const data = await res.json();
+            set({ systemHealth: data });
+        } catch { /* noop */ }
+    },
+
+    startDemo: () => set({ demoActive: true, demoStep: 1, activePage: 'command-center' }),
+    nextDemoStep: () => set(state => ({ demoStep: Math.min(10, state.demoStep + 1) })),
+    stopDemo: () => set({ demoActive: false, demoStep: 0 }),
+    toggleChaos: () => set(state => ({ chaosActive: !state.chaosActive })),
 }));
 
 export default useStore;
-export type { TrafficZone, EmissionZone, Route, Alert, HistoricalData, HourlyData, Overview, Settings, User, PredictiveZone, EmergencyCorridor, LeaderboardItem };
+export type { TrafficZone, EmissionZone, Route, Alert, HistoricalData, HourlyData, Overview, Settings, User, PredictiveZone, EmergencyCorridor, LeaderboardItem, CopilotResponse, IncidentItem, ForecastTimelineItem };

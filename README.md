@@ -1,4 +1,6 @@
-# 🌊 Safe-Flow: AI-Powered Eco-Friendly Urban Mobility & Smart Traffic Platform
+# 🚦 SAFE-FLOW X
+
+## AI Mobility Intelligence & Smart City Digital Twin Platform
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.0-black?logo=next.js)](https://nextjs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-5.0-lightgrey?logo=express)](https://expressjs.com/)
@@ -7,357 +9,177 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **Safe-Flow** is an enterprise-grade, AI-driven urban mobility platform designed to mitigate urban traffic congestion, preempt emergency response delays, optimize zero-emission multimodal transit networks, and quantify real-time carbon offsets.
+> **Safe-Flow X** is an enterprise-grade AI Mobility Intelligence and Smart City Digital Twin platform. It elevates urban traffic management into an autonomous feedback loop: **OBSERVE → UNDERSTAND → PREDICT → SIMULATE → OPTIMIZE → ACT → LEARN**.
 
 ---
 
 ## 📋 Table of Contents
 
-1. [System Overview & Key Features](#-system-overview--key-features)
-2. [Technical Architecture & Data Flow](#-technical-architecture--data-flow)
-3. [Deep-Dive Module Breakdown](#-deep-dive-module-breakdown)
-   - [Real-Time Telemetry & Heatmap Engine](#1-real-time-telemetry--heatmap-engine)
-   - [AI Time-Series Predictive Forecasting](#2-ai-time-series-predictive-forecasting)
-   - [Emergency Green Wave Preemption](#3-emergency-green-wave-preemption)
-   - [Carbon Offset & Eco-Credits Engine](#4-carbon-offset--eco-credits-engine)
-   - [Multimodal Zero-Emission Routing](#5-multimodal-zero-emission-routing)
-   - [Dual Authentication System](#6-dual-authentication-system)
-4. [Data Schemas & Dictionary](#-data-schemas--dictionary)
-5. [Complete REST API Reference & Payloads](#-complete-rest-api-reference--payloads)
-6. [WebSocket Protocol & Event Stream](#-websocket-protocol--event-stream)
-7. [Environment Variables & Setup Guide](#-environment-variables--setup-guide)
-8. [Future Strategic Roadmap](#-future-strategic-roadmap)
-9. [Contributing & License](#-contributing--license)
+1. [System Architecture & Vision](#-system-architecture--vision)
+2. [Core Subsystems & AI Modules](#-core-subsystems--ai-modules)
+   - [AI Mobility Copilot](#1-ai-mobility-copilot)
+   - [Next-Gen Traffic Prediction Engine](#2-next-gen-traffic-prediction-engine)
+   - [AI Incident Detection Engine](#3-ai-incident-detection-engine)
+   - [Smart City Digital Twin & Scenario Lab](#4-smart-city-digital-twin--scenario-lab)
+   - [Emergency Response Orchestrator](#5-emergency-response-orchestrator)
+   - [Adaptive Signal Simulator](#6-adaptive-signal-simulator)
+   - [Multimodal AI Routing](#7-multimodal-ai-routing)
+   - [City Carbon Intelligence & Eco-Credits 2.0](#8-city-carbon-intelligence--eco-credits-20)
+   - [System Health & Chaos Simulation](#9-system-health--chaos-simulation)
+3. [Complete API Reference Manual](#-complete-api-reference-manual)
+4. [WebSocket Real-Time Telemetry Stream](#-websocket-real-time-telemetry-stream)
+5. [Environment Variables & Setup Guide](#-environment-variables--setup-guide)
+6. [4-Stage Smart City Roadmap](#-4-stage-smart-city-roadmap)
+7. [License & Acknowledgments](#-license--acknowledgments)
 
 ---
 
-## 🌟 System Overview & Key Features
-
-Modern urban centers suffer from traffic bottlenecks, rising carbon footprints, and delayed emergency response vehicles. **Safe-Flow** addresses these challenges through a unified smart city platform that integrates IoT sensor streaming, predictive analytics, signal preemption, and green commuter gamification.
-
-### Key Pillars:
-- 🚦 **Real-Time Congestion & Heatmap Monitoring**: Live IoT sensor streaming and spatial density mapping for city sectors.
-- 🔮 **AI Predictive Congestion Engine**: Time-series forecasting for 1-hour, 3-hour, and 6-hour horizons with confidence metrics.
-- 🚨 **Emergency Green Wave Signal Preemption**: Active traffic light overrides for emergency vehicles (Ambulances, Fire Engines, Police).
-- 🌿 **Emissions Analytics & Carbon Offset Engine**: Granular tracking of CO₂, NOx, and PM2.5 emissions linked to carbon credits and tree planting equivalencies.
-- 🚆 **Multimodal Zero-Emission Router**: Intelligent travel combinations pairing EV shuttles, metro, e-scooters, and walking paths.
-- 🔐 **Hybrid Firebase & Local JWT Authentication**: Cloud OAuth integration alongside enterprise fallback authentication.
-
----
-
-## 🏗️ Technical Architecture & Data Flow
+## 🏗️ System Architecture & Vision
 
 ```mermaid
 graph TD
-    subgraph Client Layer [Next.js 15 Frontend Console]
-        UI[🖥️ Dashboard / Heatmaps / AI Scope UI]
-        Store[⚡ Zustand State Manager]
-        WSClient[📡 WebSocket Client Subscription]
-        UI --> Store
-        WSClient --> Store
+    subgraph Client Layer [Next.js 15 Safe-Flow X Console]
+        CC[📺 Mobility Command Center]
+        DT[🧬 Digital Twin Scenario Lab]
+        Copilot[🤖 AI Mobility Copilot Drawer]
+        Store[⚡ Zustand State Management]
+        CC --> Store
+        DT --> Store
+        Copilot --> Store
     end
 
     subgraph Transport & Gateway Layer
-        HTTP[🌐 Express REST API Router]
-        WSServer[🔌 WebSocket Gateway Server]
+        REST[🌐 Express REST API Gateway]
+        WSBus[🔌 Real-Time Event Bus]
     end
 
-    subgraph Security & Identity Layer
-        FirebaseAuth[🔥 Firebase Admin SDK]
-        LocalJWT[🔑 JsonWebToken Engine]
+    subgraph Modular AI & Simulation Engines
+        AIProv[🤖 AI Provider Abstraction]
+        DTEngine[🧬 Digital Twin & Scenario Lab Engine]
+        PredictEngine[🔮 Multi-Horizon Forecaster]
+        IncidentEngine[🧬 Incident Detector]
+        EmgEngine[🚨 Emergency Signal Preemption]
+        SignalEngine[🚦 Adaptive Signal Simulator]
+        EcoEngine[🌱 Carbon Intelligence Engine]
     end
 
-    subgraph AI & Processing Modules
-        TrafficGen[🚘 Telemetry & Heatmap Engine]
-        PredictiveAI[🔮 AI Time-Series Forecaster]
-        EmergencyEngine[🚨 Signal Preemption Dispatcher]
-        EcoCalc[🌱 Carbon Offset & Gamification Engine]
-    end
-
-    UI -->|HTTP Requests| HTTP
-    Store -->|WS Telemetry Data| WSServer
+    Store -->|HTTP Async| REST
+    Store -->|WS Event Stream| WSBus
     
-    HTTP -->|Token Validation| FirebaseAuth
-    HTTP -->|JWT Fallback| LocalJWT
-    
-    HTTP --> TrafficGen
-    HTTP --> PredictiveAI
-    HTTP --> EmergencyEngine
-    HTTP --> EcoCalc
+    REST --> AIProv
+    REST --> DTEngine
+    REST --> PredictEngine
+    REST --> IncidentEngine
+    REST --> EmgEngine
+    REST --> SignalEngine
+    REST --> EcoEngine
 ```
 
 ---
 
-## 🏎️ Deep-Dive Module Breakdown
+## 🏎️ Core Subsystems & AI Modules
 
-### 1. Real-Time Telemetry & Heatmap Engine
-- Aggregates zone metrics: vehicle density, average velocity (km/h), incident frequency, and congestion percentages.
-- Heatmap generator maps spatial coordinates `(lat, lng)` and calculates normalized intensity values `(0.0 - 1.0)`.
+### 1. AI Mobility Copilot
+- **Endpoint**: `POST /api/ai/copilot`
+- **Capabilities**: Natural language intent recognition (`TRAFFIC_ANALYSIS`, `ECO_ROUTE`, `PREDICTION_QUERY`, `EMERGENCY_DISPATCH`, `SCENARIO_SIMULATION`), live application telemetry retrieval, explainable answers, confidence scoring, and source referencing.
+- **Provider Abstraction**: `AIProvider` interface supporting Gemini API, Groq, and fallback explainability engines.
 
-### 2. AI Time-Series Predictive Forecasting
-- Evaluates temporal rush-hour trends, zone classification (Commercial, Residential, Industrial, Transport Hubs), and historical variance.
-- Outputs 1-hour, 3-hour, and 6-hour forecast horizons with automated operational recommendations (e.g., *"Activate Signal Optimization"* vs *"Normal Flow Monitoring"*).
+### 2. Next-Gen Traffic Prediction Engine
+- **Endpoint**: `GET /api/ai/traffic-forecast`
+- **Horizons**: 15m, 30m, 1h, 2h, 3h, 6h, 12h, 24h forecasts.
+- **Strategies**: `BASELINE`, `MOVING_AVERAGE`, `TIME_SERIES`, `ML_SIMULATION`.
+- **Metrics**: Congestion %, Average Velocity (km/h), Vehicle Volume, Queue Length (m), Incident Risk, and CO₂ Emissions.
 
-### 3. Emergency Green Wave Preemption
-- Simulates priority corridor allocation between origin and destination zones.
-- Overrides traffic signal phases ahead of emergency response vehicles, delivering time savings of 8–15 minutes per dispatch.
+### 3. AI Incident Detection Engine
+- **Endpoint**: `POST /api/incidents/detect`
+- **Features**: Real-time anomaly detection for sudden speed drops, volume spikes, and road blockages with severity rating and delay impact estimations.
 
-### 4. Carbon Offset & Eco-Credits Engine
-- Converts vehicle mileage and powertrain factors (Gasoline: 0.21 kg CO₂/km, SUV: 0.28, Hybrid: 0.11, EV: 0.05) into total monthly carbon output.
-- Calculates tree planting offset requirements (based on ~21.77 kg CO₂ absorption per tree per year) and awards Eco-Credits for sustainable choices.
+### 4. Smart City Digital Twin & Scenario Lab
+- **Endpoints**: `POST /api/digital-twin/simulate` & `POST /api/scenarios/compare`
+- **Parameters**: Traffic volume adjustments (±50%), emergency road closures, adverse rain/weather events, and EV adoption rate scaling.
+- **Output**: Before vs after comparison metrics for congestion, average delay, and hourly CO₂.
 
-### 5. Multimodal Zero-Emission Routing
-- Recommends zero-emission journey plans combining public EV transport, high-speed rail/metro, micro-mobility e-scooters, and dedicated pedestrian corridors.
+### 5. Emergency Response Orchestrator
+- **Endpoints**: `POST /api/emergency/dispatch`, `GET /api/emergency/:id`, `DELETE /api/emergency/:id/cancel`
+- **Supported Vehicles**: Ambulances, Fire Engines, Police Patrols, Disaster Response Units.
+- **Capabilities**: Green wave signal preemption, conflict intersection management, and live response efficiency tracking.
 
-### 6. Dual Authentication System
-- Seamlessly handles Firebase OAuth 2.0 (Google, GitHub, Email/Password) when configured, falling back to local bcrypt-encrypted JWT tokens for offline/standalone execution.
+### 6. Adaptive Signal Simulator
+- **Endpoint**: `POST /api/signals/optimize`
+- **Phases**: Dynamic North/South and East/West phase adjustments based on queue length and demand mode (`NORMAL`, `PEAK`, `EMERGENCY`, `LOW_TRAFFIC`).
 
----
+### 7. Multimodal AI Routing
+- **Endpoint**: `POST /api/routes/intelligent-multimodal`
+- **Strategies**: `FASTEST`, `CHEAPEST`, `ECO`, `BALANCED`, `LOW_WALKING`, `PUBLIC_TRANSIT`.
+- **Breakdown**: Detailed scoring per strategy with transparent reasoning explanations.
 
-## 🗄️ Data Schemas & Dictionary
+### 8. City Carbon Intelligence & Eco-Credits 2.0
+- **Endpoints**: `/api/emissions/forecast`, `/api/emissions/hotspots`, `/api/eco/credits`, `/api/eco/badges`, `/api/eco/challenges`
+- **Features**: City emission hotspot heatmaps, weekly eco-commute challenges, and earnable badges (*Green Starter*, *Carbon Cutter*, *Transit Champion*, *EV Explorer*, *Eco Hero*).
 
-### User Model
-```json
-{
-  "id": "string (UUID or Firebase UID)",
-  "email": "string",
-  "name": "string",
-  "role": "admin | fleet_manager | citizen",
-  "avatar": "string (Initials)",
-  "provider": "email | google | github | firebase"
-}
-```
-
-### Traffic Zone Model
-```json
-{
-  "zoneId": "string",
-  "zoneName": "string",
-  "lat": "number",
-  "lng": "number",
-  "congestionLevel": "number (0-100%)",
-  "congestionCategory": "Low | Medium | High",
-  "averageSpeed": "number (km/h)",
-  "vehicleCount": "number",
-  "incidents": "number",
-  "timestamp": "ISO-8601 String"
-}
-```
-
-### Predictive Zone Model
-```json
-{
-  "zoneId": "string",
-  "zoneName": "string",
-  "currentCongestion": "number",
-  "forecast1h": "number",
-  "forecast3h": "number",
-  "forecast6h": "number",
-  "trend": "Improving | Worsening",
-  "confidenceScore": "number (0-100%)",
-  "suggestedAction": "string"
-}
-```
+### 9. System Health & Chaos Simulation
+- **Endpoint**: `GET /api/system/health`
+- **Capabilities**: Microservice health monitoring (Backend, DB, AI Engine, Telemetry, WebSocket) and developer chaos failure injection panel to test graceful UI degradation.
 
 ---
 
-## 📡 Complete REST API Reference & Payloads
+## 📡 Complete API Reference Manual
 
-### 1. User Login (`POST /api/auth/login`)
-**Request Body:**
-```json
-{
-  "email": "admin@smartcity.gov",
-  "password": "admin123"
-}
-```
-**Response:**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6...",
-  "user": {
-    "id": "1",
-    "email": "admin@smartcity.gov",
-    "name": "City Admin",
-    "role": "admin",
-    "avatar": "CA"
-  }
-}
-```
-
----
-
-### 2. AI Predictive Traffic (`GET /api/routes/predictive-traffic`)
-**Headers:** `Authorization: Bearer <token>`  
-**Response Sample:**
-```json
-{
-  "predictions": [
-    {
-      "zoneId": "z1",
-      "zoneName": "Downtown Core",
-      "currentCongestion": 68,
-      "forecast1h": 74,
-      "forecast3h": 82,
-      "forecast6h": 45,
-      "trend": "Worsening",
-      "confidenceScore": 94.2,
-      "suggestedAction": "Activate Signal Optimization"
-    }
-  ],
-  "generatedAt": "2026-09-22T22:45:00.000Z"
-}
-```
-
----
-
-### 3. Emergency Green Wave Dispatch (`POST /api/routes/emergency-corridor`)
-**Request Body:**
-```json
-{
-  "vehicleType": "Ambulance",
-  "originZone": "Downtown Core",
-  "destinationZone": "Airport Hub"
-}
-```
-**Response Sample:**
-```json
-{
-  "corridorId": "CORRIDOR-4812",
-  "vehicleType": "Ambulance",
-  "status": "ACTIVE_GREEN_WAVE",
-  "origin": "Downtown Core",
-  "destination": "Airport Hub",
-  "signalsSynchronized": 7,
-  "estimatedTimeSavedMin": 12,
-  "priorityLevel": "HIGH_PRIORITY_PREEMPTION",
-  "dispatchTimestamp": "2026-09-22T22:45:00.000Z"
-}
-```
-
----
-
-### 4. Carbon Offset Calculator (`POST /api/emissions/offset-calculator`)
-**Request Body:**
-```json
-{
-  "monthlyKm": 450,
-  "vehicleType": "car"
-}
-```
-**Response Sample:**
-```json
-{
-  "monthlyKm": 450,
-  "vehicleType": "car",
-  "monthlyCO2Kg": 94.5,
-  "yearlyCO2Tonnes": 1.13,
-  "treesNeededToOffset": 53,
-  "ecoCreditsEarnable": 180,
-  "suggestedOffsets": [
-    {
-      "provider": "City Green Canopy Program",
-      "costUsd": 133,
-      "treesPlanted": 53
-    }
-  ]
-}
-```
-
----
-
-## 📡 WebSocket Protocol & Event Stream
-
-Connect to WebSocket endpoint: `ws://localhost:4000/ws`
-
-### Incoming Messages:
-
-#### 1. Traffic Telemetry Broadcast (`traffic_update` - every 5s)
-```json
-{
-  "type": "traffic_update",
-  "data": [
-    { "zoneId": "z1", "congestionLevel": 65, "vehicleCount": 1120, ... }
-  ],
-  "timestamp": "2026-09-22T22:45:00.000Z"
-}
-```
-
-#### 2. Emission Broadcast (`emission_update` - every 10s)
-```json
-{
-  "type": "emission_update",
-  "data": [
-    { "zoneId": "z1", "co2Emission": 134.4, "airQualityIndex": 85, ... }
-  ],
-  "timestamp": "2026-09-22T22:45:00.000Z"
-}
-```
-
-#### 3. Real-Time Alert Broadcast (`alert` - on event)
-```json
-{
-  "type": "alert",
-  "data": {
-    "id": "alert-901",
-    "type": "congestion",
-    "severity": "high",
-    "title": "Heavy Congestion Detected",
-    "zone": "Downtown Core",
-    "message": "Traffic speed dropped below 10 km/h."
-  }
-}
-```
+| Category | Method | Endpoint | Description |
+| :--- | :--- | :--- | :--- |
+| **Copilot** | `POST` | `/api/ai/copilot` | Execute natural language query with context retrieval |
+| **Prediction** | `GET` | `/api/ai/traffic-forecast` | Multi-horizon 15m-24h traffic prediction |
+| **Incidents** | `POST` | `/api/incidents/detect` | Run incident anomaly detection |
+| **Digital Twin**| `POST` | `/api/digital-twin/simulate`| Execute digital twin scenario simulation |
+| **Scenario Lab**| `POST` | `/api/scenarios/compare` | Compare baseline vs simulated scenarios |
+| **Emergency** | `POST` | `/api/emergency/dispatch` | Dispatch green wave emergency corridor |
+| **Signals** | `POST` | `/api/signals/optimize` | Optimize adaptive signal phase timings |
+| **Multimodal** | `POST` | `/api/routes/intelligent-multimodal` | Intelligent strategy route solver |
+| **Emissions** | `GET` | `/api/emissions/hotspots` | Retrieve city carbon hotspot zones |
+| **Eco Credits** | `GET` | `/api/eco/credits` | Fetch user eco-credits, badges & challenges |
+| **Health** | `GET` | `/api/system/health` | System health status & microservice latency |
+| **Audit** | `GET` | `/api/audit` | Admin security audit log stream |
 
 ---
 
 ## ⚙️ Environment Variables & Setup Guide
 
-### 1. Backend Environment Setup (`backend/.env`)
+### 1. Backend Configuration (`backend/.env`)
 ```env
 PORT=4000
-JWT_SECRET=your-secure-jwt-secret-key-2026
+JWT_SECRET=your-custom-jwt-secret-key-2026
+AI_PROVIDER=gemini-fallback # 'gemini' or 'gemini-fallback'
+GEMINI_API_KEY=your_gemini_api_key
 FIREBASE_PROJECT_ID=your-firebase-project-id
-# Optional: FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}
 ```
 
-### 2. Frontend Environment Setup (`frontend/.env.local`)
+### 2. Frontend Configuration (`frontend/.env.local`)
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:4000/api
 NEXT_PUBLIC_AUTH_MODE=local # 'local' or 'firebase'
-NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 ```
 
 ### 3. Execution Commands
-
-#### Run Backend:
 ```bash
-cd backend
+# Backend
+cd Safe-Flow-main/backend
 npm install
 npm run dev
-```
 
-#### Run Frontend:
-```bash
-cd frontend
+# Frontend
+cd Safe-Flow-main/frontend
 npm install
 npm run dev
 ```
 
 ---
 
-## 🔮 Future Strategic Roadmap
+## 🔮 4-Stage Smart City Roadmap
 
-- [x] **Phase 1: Telemetry & Eco Routing** - Dynamic congestion mapping & CO₂ optimization.
-- [x] **Phase 2: Hybrid Authentication** - Firebase OAuth & local JWT role-based security.
-- [x] **Phase 3: AI Predictive Engine & Signal Preemption** - AI 1h-6h forecasts & emergency corridors.
-- [ ] **Phase 4: V2X & Autonomous Fleet Protocol** - Direct Vehicle-to-Infrastructure (V2I) telemetry.
-- [ ] **Phase 5: Blockchain Carbon Offset Settlement** - Tokenized carbon credits on eco-friendly layer-2 blockchains.
+- [x] **PHASE 1 — Safe-Flow Core**: Real-time traffic monitoring, eco-routes, emission analytics.
+- [x] **PHASE 2 — AI Intelligence**: AI Copilot, traffic forecasting, incident anomaly detection.
+- [x] **PHASE 3 — Digital Twin**: Scenario Lab simulation, adaptive signals, emergency orchestration.
+- [ ] **PHASE 4 — Connected Smart City**: Real IoT sensor hardware feeds, V2X protocol, and autonomous fleet integration.
 
 ---
 
@@ -366,4 +188,4 @@ npm run dev
 Distributed under the **MIT License**. See `LICENSE` for details.
 
 ---
-*Developed with ❤️ by Monishwaran for sustainable urban smart cities.*
+*Created with ❤️ by Monishwaran for sustainable smart city digital twins.*

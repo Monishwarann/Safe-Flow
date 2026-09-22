@@ -6,6 +6,11 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 
+// Safe-Flow X Modular Services
+const aiProvider = require('./services/aiProvider');
+const digitalTwinEngine = require('./services/digitalTwinEngine');
+const mobilityIntelligence = require('./services/mobilityIntelligence');
+
 // Firebase Admin SDK
 let admin;
 let firebaseInitialized = false;
@@ -684,6 +689,156 @@ app.post('/api/routes/multimodal', authMiddleware, (req, res) => {
                 costUsd: 1.80,
                 steps: ['25 min Dedicated Green Bike Lane']
             }
+        ]
+    });
+});
+
+// ============== SAFE-FLOW X: AI COPILOT ROUTE ==============
+app.post('/api/ai/copilot', authMiddleware, async (req, res) => {
+    const { prompt } = req.body;
+    if (!prompt) return res.status(400).json({ error: 'Prompt is required' });
+
+    mobilityIntelligence.logAudit(req.user, 'AI_COPILOT_QUERY', { prompt });
+    const trafficData = generateTrafficData();
+    const result = await aiProvider.queryCopilot(prompt, { trafficData });
+    res.json(result);
+});
+
+// ============== SAFE-FLOW X: ADVANCED FORECAST & INCIDENTS ==============
+app.get('/api/ai/traffic-forecast', authMiddleware, (req, res) => {
+    const strategy = req.query.strategy || 'TIME_SERIES';
+    res.json(mobilityIntelligence.generateForecast(strategy));
+});
+
+app.post('/api/incidents/detect', authMiddleware, (req, res) => {
+    const telemetry = generateTrafficData();
+    mobilityIntelligence.logAudit(req.user, 'INCIDENT_DETECTION_RUN', {});
+    res.json(mobilityIntelligence.detectIncidents(telemetry));
+});
+
+app.get('/api/incidents', authMiddleware, (req, res) => {
+    res.json(mobilityIntelligence.detectIncidents(generateTrafficData()));
+});
+
+// ============== SAFE-FLOW X: DIGITAL TWIN & SCENARIO LAB ==============
+app.post('/api/digital-twin/simulate', authMiddleware, (req, res) => {
+    const { scenario = 'ROAD_CLOSURE', parameters = {} } = req.body;
+    mobilityIntelligence.logAudit(req.user, 'DIGITAL_TWIN_SIMULATE', { scenario, parameters });
+    res.json(digitalTwinEngine.simulateScenario(scenario, parameters));
+});
+
+app.post('/api/scenarios/compare', authMiddleware, (req, res) => {
+    const { scenarios = [] } = req.body;
+    mobilityIntelligence.logAudit(req.user, 'SCENARIO_LAB_COMPARE', { scenarioCount: scenarios.length });
+    res.json(digitalTwinEngine.compareScenarios(scenarios));
+});
+
+// ============== SAFE-FLOW X: EMERGENCY RESPONSE ORCHESTRATOR ==============
+app.post('/api/emergency/dispatch', authMiddleware, (req, res) => {
+    const { vehicleType = 'Ambulance', originZone = 'Downtown Core', destinationZone = 'Airport Hub' } = req.body;
+    mobilityIntelligence.logAudit(req.user, 'EMERGENCY_DISPATCH', { vehicleType, originZone, destinationZone });
+
+    const corridorId = `EMG-${Math.floor(1000 + Math.random() * 9000)}`;
+    res.json({
+        success: true,
+        dispatchId: corridorId,
+        corridorId,
+        vehicleType,
+        status: 'ACTIVE_GREEN_WAVE',
+        origin: originZone,
+        destination: destinationZone,
+        signalsControlled: 8,
+        estimatedTimeSavedMin: 14,
+        conflictIntersections: ['INT-102'],
+        dispatchTimestamp: new Date().toISOString(),
+    });
+});
+
+app.get('/api/emergency/:id', authMiddleware, (req, res) => {
+    res.json({
+        success: true,
+        dispatchId: req.params.id,
+        status: 'ACTIVE_GREEN_WAVE',
+        etaMinutes: 6,
+        progressPercent: 65,
+    });
+});
+
+app.delete('/api/emergency/:id/cancel', authMiddleware, (req, res) => {
+    mobilityIntelligence.logAudit(req.user, 'EMERGENCY_CANCEL', { id: req.params.id });
+    res.json({ success: true, message: `Emergency Corridor ${req.params.id} released to normal traffic signal control.` });
+});
+
+// ============== SAFE-FLOW X: ADAPTIVE SIGNALS ENGINE ==============
+app.post('/api/signals/optimize', authMiddleware, (req, res) => {
+    const { mode = 'NORMAL' } = req.body;
+    mobilityIntelligence.logAudit(req.user, 'SIGNALS_OPTIMIZE', { mode });
+    res.json(digitalTwinEngine.optimizeSignals(mode));
+});
+
+// ============== SAFE-FLOW X: MULTIMODAL & CARBON INTELLIGENCE ==============
+app.post('/api/routes/intelligent-multimodal', authMiddleware, (req, res) => {
+    const { origin, destination, strategy = 'BALANCED' } = req.body;
+    res.json(mobilityIntelligence.getIntelligentMultimodal(origin, destination, strategy));
+});
+
+app.get('/api/emissions/forecast', authMiddleware, (req, res) => {
+    res.json({
+        success: true,
+        currentHourlyCO2Kg: 520,
+        forecast12hCO2Kg: 440,
+        avoidedCO2ThisWeekKg: 1840,
+        trend: 'DECREASING',
+    });
+});
+
+app.get('/api/emissions/hotspots', authMiddleware, (req, res) => {
+    const telemetry = generateTrafficData();
+    res.json(mobilityIntelligence.getCarbonHotspots(telemetry));
+});
+
+// ============== SAFE-FLOW X: ECO CREDITS 2.0 & GAMIFICATION ==============
+app.get('/api/eco/credits', authMiddleware, (req, res) => {
+    res.json({
+        success: true,
+        ecoCredits: 1450,
+        tier: 'Gold Eco Commuter',
+        savedCO2Kg: 340,
+        levelProgressPercent: 78,
+    });
+});
+
+app.get('/api/eco/challenges', authMiddleware, (req, res) => {
+    res.json({ success: true, challenges: mobilityIntelligence.weeklyChallenges });
+});
+
+app.get('/api/eco/badges', authMiddleware, (req, res) => {
+    res.json({ success: true, badges: mobilityIntelligence.badges });
+});
+
+// ============== SAFE-FLOW X: SYSTEM HEALTH & AUDIT & MAP LAYERS ==============
+app.get('/api/system/health', (req, res) => {
+    res.json(mobilityIntelligence.getSystemHealth());
+});
+
+app.get('/api/audit', authMiddleware, (req, res) => {
+    if (req.user?.role !== 'admin') {
+        return res.status(403).json({ error: 'Access denied: Admin role required for audit logs' });
+    }
+    res.json({ success: true, auditLogs: mobilityIntelligence.auditLogs });
+});
+
+app.get('/api/map/layers', authMiddleware, (req, res) => {
+    res.json({
+        success: true,
+        layers: [
+            { id: 'traffic', name: 'Real-Time Congestion', enabled: true },
+            { id: 'predictions', name: 'AI Forecast (3h)', enabled: false },
+            { id: 'incidents', name: 'Traffic Incidents', enabled: true },
+            { id: 'emergency', name: 'Green Wave Corridors', enabled: true },
+            { id: 'signals', name: 'Adaptive Signal Timings', enabled: false },
+            { id: 'transit', name: 'Metro & EV Bus Lines', enabled: true },
+            { id: 'hotspots', name: 'Carbon Emission Hotspots', enabled: false },
         ]
     });
 });
