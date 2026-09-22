@@ -52,9 +52,49 @@ const wss = new WebSocket.Server({ server, path: '/ws' });
 const PORT = process.env.PORT || 4000;
 const JWT_SECRET = process.env.JWT_SECRET || 'smart-mobility-secret-key-2026';
 
-// Middleware
+// ============== SECURITY ENHANCEMENTS & MIDDLEWARE ==============
+// 1. Security Headers Middleware
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    res.setHeader('Content-Security-Policy', "default-src 'self'");
+    res.setHeader('Referrer-Policy', 'no-referrer-when-downgrade');
+    next();
+});
+
+// 2. In-Memory API Rate Limiting (100 req/min per IP)
+const rateLimitMap = new Map();
+app.use((req, res, next) => {
+    const ip = req.ip || req.connection.remoteAddress || '127.0.0.1';
+    const now = Date.now();
+    const windowMs = 60 * 1000;
+    const maxRequests = 120;
+
+    const userLimit = rateLimitMap.get(ip) || { count: 0, resetTime: now + windowMs };
+
+    if (now > userLimit.resetTime) {
+        userLimit.count = 1;
+        userLimit.resetTime = now + windowMs;
+    } else {
+        userLimit.count += 1;
+    }
+
+    rateLimitMap.set(ip, userLimit);
+
+    if (userLimit.count > maxRequests) {
+        return res.status(429).json({
+            error: 'Too Many Requests',
+            message: 'Rate limit exceeded. Please slow down requests.',
+        });
+    }
+    next();
+});
+
+// 3. CORS & Payload Limiting
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '100kb' }));
 
 // ============== IN-MEMORY DATA STORE ==============
 const users = [
