@@ -856,7 +856,17 @@ app.get('/api/eco/badges', authMiddleware, (req, res) => {
     res.json({ success: true, badges: mobilityIntelligence.badges });
 });
 
-// ============== SAFE-FLOW X: SYSTEM HEALTH & AUDIT & MAP LAYERS ==============
+// ============== SAFE-FLOW X: ROOT, SYSTEM HEALTH & AUDIT & MAP LAYERS ==============
+app.get('/', (req, res) => {
+    res.json({
+        name: 'Safe-Flow X Backend API Gateway',
+        status: 'online',
+        version: '1.0.0',
+        healthCheck: '/api/system/health',
+        documentation: 'See README.md for full API details'
+    });
+});
+
 app.get('/api/system/health', (req, res) => {
     res.json(mobilityIntelligence.getSystemHealth());
 });
