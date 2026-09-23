@@ -127,6 +127,7 @@ graph TD
 
 | Category | Method | Endpoint | Description |
 | :--- | :--- | :--- | :--- |
+| **Gateway** | `GET` | `/` | API Gateway root status & metadata |
 | **Copilot** | `POST` | `/api/ai/copilot` | Execute natural language query with context retrieval |
 | **Prediction** | `GET` | `/api/ai/traffic-forecast` | Multi-horizon 15m-24h traffic prediction |
 | **Incidents** | `POST` | `/api/incidents/detect` | Run incident anomaly detection |
