@@ -167,7 +167,7 @@ export default function DigitalTwinLab() {
 
                                     <h5 style={{ fontSize: 14, fontWeight: 700, marginBottom: 10 }}>Recommended City Mitigations</h5>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                        {digitalTwinResult.recommendedMitigations?.map((mit, i) => (
+                                        {digitalTwinResult.recommendedMitigations?.map((mit: string, i: number) => (
                                             <div key={i} style={{ padding: '10px 14px', borderRadius: 8, background: 'rgba(59, 130, 246, 0.08)', border: '1px solid rgba(59, 130, 246, 0.2)', fontSize: 13, color: 'var(--text-primary)' }}>
                                                 💡 {mit}
                                             </div>

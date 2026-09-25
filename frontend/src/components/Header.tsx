@@ -15,9 +15,16 @@ const pageTitles: Record<string, { title: string; subtitle: string }> = {
     settings: { title: 'Settings', subtitle: 'Platform configuration' },
 };
 
-export default function Header() {
+interface HeaderProps {
+    title?: string;
+    subtitle?: string;
+}
+
+export default function Header({ title, subtitle }: HeaderProps = {}) {
     const { activePage, alerts, fetchTrafficData, fetchEmissionData } = useStore();
     const pageInfo = pageTitles[activePage] || { title: 'Dashboard', subtitle: '' };
+    const displayTitle = title || pageInfo.title;
+    const displaySubtitle = subtitle !== undefined ? subtitle : pageInfo.subtitle;
     const unreadAlerts = alerts.filter(a => !a.isRead).length;
 
     const handleRefresh = () => {
@@ -40,8 +47,8 @@ export default function Header() {
         >
             {/* Title */}
             <div>
-                <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: -0.5 }}>{pageInfo.title}</h1>
-                <p style={{ fontSize: 14, color: 'var(--text-muted)', marginTop: 2 }}>{pageInfo.subtitle}</p>
+                <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: -0.5 }}>{displayTitle}</h1>
+                <p style={{ fontSize: 14, color: 'var(--text-muted)', marginTop: 2 }}>{displaySubtitle}</p>
             </div>
 
             {/* Actions */}

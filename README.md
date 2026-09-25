@@ -163,12 +163,12 @@ NEXT_PUBLIC_AUTH_MODE=local # 'local' or 'firebase'
 ### 3. Execution Commands
 ```bash
 # Backend
-cd Safe-Flow-main/backend
+cd backend
 npm install
 npm run dev
 
-# Frontend
-cd Safe-Flow-main/frontend
+# Frontend (in a separate terminal)
+cd frontend
 npm install
 npm run dev
 ```
